@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <group android:checkableBehavior="single">
+
+
+        <item
+            android:id="@+id/navigation_picture"
+            android:checked="true"
+            android:icon="@drawable/tupian"
+            android:title="@string/picture"
+            />
+
+        <item
+            android:id="@+id/navigation_movie"
+            android:checked="true"
+            android:icon="@drawable/dianying_norml"
+            android:title="@string/movie"/>
+
+        <item
+            android:id="@+id/navigation_about"
+            android:checked="true"
+            android:icon="@drawable/guanyu"
+            android:title="@string/about"
+            />
+
+
+    </group>
+</menu>
