@@ -27,7 +27,10 @@ Retrofit <br/>http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2015/0915/34
 ButterKnife<br/>https://github.com/JakeWharton/butterknife</br>
 
 ##关于我
-[@RtSunoath](http://weibo.com/Rtsunoath) 一个小白,还请多指教.
+[@RtSunoath](http://weibo.com/Rtsunoath).
+
+###Listener
+MIT
 
 
 
