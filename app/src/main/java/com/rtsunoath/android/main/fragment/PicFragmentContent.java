@@ -2,14 +2,10 @@ package com.rtsunoath.android.main.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,28 +24,43 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by tengshuai on 2016/2/22.
- */
-public class PicContentFrament extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ImgView {
-
-    private int CLASSITFY_ID = 1;
-
+public class PicFragmentContent extends Fragment
+        implements SwipeRefreshLayout.OnRefreshListener, ImgView
+{
+    private static final String CLASSITFY_ID = "ClassItfy_Id";
+    ImgPresenter mPresenter;
     @Bind(R.id.swipe_layout_pic)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @Bind(R.id.recly_view)
     RecyclerView mRecyclerView;
-
     StaggeredGridLayoutManager mGridLayoutManager;
     PicAdapter mPicAdapter;
-
     List<ClassifyBean> mClassifyBeanList;
-    ImgPresenter mPresenter;
+    private int mClassitfyId = 1;
 
+    public static PicFragmentContent newInstance(int classitfyId)
+    {
+        PicFragmentContent fragment = new PicFragmentContent();
+        Bundle args = new Bundle();
+        args.putInt(CLASSITFY_ID, classitfyId);
+        fragment.setArguments(args);
+        //        Log.e("newInstance", "newInstance: " + classitfyId);
+        return fragment;
+    }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        if(getArguments() != null)
+        {
+            mClassitfyId = getArguments().getInt(CLASSITFY_ID);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         View view = inflater.inflate(R.layout.frament_pic, null);
         ButterKnife.bind(this, view);
         mPresenter = new ImgPresenterImpl(this);
@@ -59,9 +70,9 @@ public class PicContentFrament extends Fragment implements SwipeRefreshLayout.On
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
         super.onViewCreated(view, savedInstanceState);
-
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         mGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -69,10 +80,12 @@ public class PicContentFrament extends Fragment implements SwipeRefreshLayout.On
         mRecyclerView.setLayoutManager(mGridLayoutManager);
         mPicAdapter = new PicAdapter(getActivity());
         mRecyclerView.setAdapter(mPicAdapter);
-        mPicAdapter.setOnitemClickLisenter(new PicAdapter.PicOnItemClickListener() {
+
+        mPicAdapter.setOnitemClickLisenter(new PicAdapter.PicOnItemClickListener()
+        {
             @Override
-            public void picOnItemClickListener(View view, int pos, ClassifyBean bean) {
-                //TODO
+            public void picOnItemClickListener(View view, int pos, ClassifyBean bean)
+            {
                 Intent intent = new Intent(getActivity(), ImageDatilActivity.class);
 
                 long id = bean.getTngou().get(pos).getId();
@@ -85,36 +98,35 @@ public class PicContentFrament extends Fragment implements SwipeRefreshLayout.On
             }
         });
 
-
     }
 
     @Override
-    public void onRefresh() {
-        if (mClassifyBeanList != null) {
-//            mClassifyBeanList.clear();
-        }
-        mPresenter.loadList(CLASSITFY_ID);
-    }
-
-    @Override
-    public void loadImgDatas(List<ClassifyBean> mlist) {
-
-        if (mClassifyBeanList == null) {
+    public void loadImgDatas(List<ClassifyBean> mlist)
+    {
+        if(mClassifyBeanList == null)
+        {
             mClassifyBeanList = new ArrayList<>();
         }
+        mClassifyBeanList.clear();
         mClassifyBeanList.addAll(mlist);
         mPicAdapter.setDatas(mClassifyBeanList);
     }
 
     @Override
-    public void showProgress() {
-
+    public void showProgress()
+    {
         mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
-    public void hideProgress() {
+    public void hideProgress()
+    {
         mSwipeRefreshLayout.setRefreshing(false);
+    }
 
+    @Override
+    public void onRefresh()
+    {
+        mPresenter.loadList(mClassitfyId);
     }
 }

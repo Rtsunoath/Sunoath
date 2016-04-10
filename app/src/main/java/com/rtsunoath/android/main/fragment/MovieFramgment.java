@@ -40,7 +40,31 @@ public class MovieFramgment extends Fragment implements MovieView, OnRefreshList
     List<MovieBean> mlist;
     MoviePresenter mMoviePresenter;
     LinearLayoutManager mManager;
+    private RecyclerView.OnScrollListener mListener = new RecyclerView.OnScrollListener()
+    {
+        private int lastVisibItem;
 
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+        {
+            super.onScrollStateChanged(recyclerView, newState);
+            if(newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibItem + 1 == mMovieAdapter
+                    .getItemCount())
+            {
+                //加载更多
+                Snackbar.make(getActivity().findViewById(R.id.drawer_layout),
+                        getString(R.string.load_more), Snackbar.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+        {
+            super.onScrolled(recyclerView, dx, dy);
+            lastVisibItem = mManager.findLastVisibleItemPosition();
+
+        }
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,7 +80,6 @@ public class MovieFramgment extends Fragment implements MovieView, OnRefreshList
         onRefresh();
         return view;
     }
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -77,27 +100,6 @@ public class MovieFramgment extends Fragment implements MovieView, OnRefreshList
 
     }
 
-
-    private RecyclerView.OnScrollListener mListener = new RecyclerView.OnScrollListener() {
-        private int lastVisibItem;
-
-        @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            super.onScrollStateChanged(recyclerView, newState);
-            if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibItem + 1 == mMovieAdapter.getItemCount()) {
-                //加载更多
-                Snackbar.make(getActivity().findViewById(R.id.drawer_layout), getString(R.string.load_more), Snackbar.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-            lastVisibItem = mManager.findLastVisibleItemPosition();
-
-        }
-    };
-
     @Override
     public void onRefresh() {
 
@@ -115,8 +117,6 @@ public class MovieFramgment extends Fragment implements MovieView, OnRefreshList
         }
         mlist.addAll(movieBeanList);
         mMovieAdapter.setDatas(mlist);
-
-
     }
 
     @Override
