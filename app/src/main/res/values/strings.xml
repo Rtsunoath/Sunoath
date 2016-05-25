@@ -17,4 +17,7 @@
     <string name="load_fail">好像出问题了...=￣ω￣=</string>
     <string name="load_more">总共就这么多哟..</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

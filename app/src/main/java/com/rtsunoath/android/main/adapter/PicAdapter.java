@@ -1,7 +1,6 @@
 package com.rtsunoath.android.main.adapter;
 
 import android.content.Context;
-import android.media.Image;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,42 +21,50 @@ import butterknife.ButterKnife;
 /**
  * Created by tengshuai on 2016/2/23.
  */
-public class PicAdapter extends RecyclerView.Adapter<PicAdapter.PicViewHolder> {
-    //用于凭借api返回的img；封面照片
-    private String URL_Base = "http://tnfs.tngou.net/image";
-
+public class PicAdapter extends RecyclerView.Adapter<PicAdapter.PicViewHolder>
+{
+    private static final String TAG = "PicAdapter";
     ClassifyBean mClassifyBean;
     List<ClassifyBean> mList;
     Context mContext;
     PicOnItemClickListener mListener;
+    //用于凭借api返回的img；封面照片
+    private String URL_Base = "http://tnfs.tngou.net/image";
 
-    public PicAdapter(Context context) {
+    public PicAdapter(Context context)
+    {
         this.mContext = context;
     }
 
-    public void setOnitemClickLisenter(PicOnItemClickListener picOnItemClickListener) {
+    public void setOnitemClickLisenter(PicOnItemClickListener picOnItemClickListener)
+    {
         this.mListener = picOnItemClickListener;
 
     }
 
 
     //刷新时获取数据
-    public void setDatas(List<ClassifyBean> list) {
+    public void setDatas(List<ClassifyBean> list)
+    {
         this.mList = list;
         this.notifyDataSetChanged();
     }
 
 
     @Override
-    public PicViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PicViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_pic_classitfy, null);
         return new PicViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(PicViewHolder holder, final int position) {
+    public void onBindViewHolder(PicViewHolder holder, final int position)
+    {
+        //        Log.e("mListSize",mList.size()+"");
         mClassifyBean = mList.get(position);
         Uri uri = Uri.parse(URL_Base + mClassifyBean.getTngou().get(position).getImg());
+
         Glide.with(mContext).load(uri).into(holder.mView);
         //图片封面
 
@@ -65,10 +72,13 @@ public class PicAdapter extends RecyclerView.Adapter<PicAdapter.PicViewHolder> {
         holder.tv_picClassIftyNum.setText(mClassifyBean.getTngou().get(position).getSize() + "张");
 
         //item点击事件
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                if (mListener != null) {
+            public void onClick(View v)
+            {
+                if(mListener != null)
+                {
                     mListener.picOnItemClickListener(v, position, mClassifyBean);
                 }
             }
@@ -78,27 +88,31 @@ public class PicAdapter extends RecyclerView.Adapter<PicAdapter.PicViewHolder> {
     }
 
     @Override
-    public int getItemCount() {
+    public int getItemCount()
+    {
         return mList == null ? 0 : mList.size();
     }
 
 
-    static class PicViewHolder extends RecyclerView.ViewHolder {
+    public interface PicOnItemClickListener
+    {
+        void picOnItemClickListener(View view, int pos, ClassifyBean bean);
+    }
+
+    static class PicViewHolder extends RecyclerView.ViewHolder
+    {
         @Bind(R.id.sv_picClassitfy)
         ImageView mView;
         @Bind(R.id.tv_picClassiftyNum)
         TextView tv_picClassIftyNum;
 
-        public PicViewHolder(View itemView) {
+        public PicViewHolder(View itemView)
+        {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
 
-    }
-
-    public interface PicOnItemClickListener {
-        void picOnItemClickListener(View view, int pos, ClassifyBean bean);
     }
 }
 
